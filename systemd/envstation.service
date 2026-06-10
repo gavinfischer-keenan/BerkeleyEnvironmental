@@ -1,0 +1,24 @@
+[Unit]
+Description=Berkeley Environmental Monitoring Station
+After=network-online.target mosquitto.service influxdb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=envstation
+WorkingDirectory=/opt/envstation
+ExecStart=/opt/envstation/venv/bin/envstation run
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+PrivateTmp=true
+ReadWritePaths=/opt/envstation/data
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
